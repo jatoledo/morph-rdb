@@ -52,6 +52,7 @@ class MorphRDBRunnerFactory extends MorphBaseRunnerFactory{
 	: MorphBaseMappingDocument = {
 			val mappingDocument = R2RMLMappingDocument(
 					mappingDocumentFile, props, connection);
+			
 			mappingDocument
 	}
 
@@ -73,21 +74,6 @@ class MorphRDBRunnerFactory extends MorphBaseRunnerFactory{
 							, dataSourceReader.asInstanceOf[MorphRDBDataSourceReader] , connection, properties);	  
 	}
 	
-//	def createConnection(morphProperties:MorphProperties) : Connection = {
-//		val connection = if(morphProperties.noOfDatabase > 0) {
-//			val databaseUser = morphProperties.databaseUser;
-//			val databaseName = morphProperties.databaseName;
-//			val databasePassword = morphProperties.databasePassword;
-//			val databaseDriver = morphProperties.databaseDriver;
-//			val databaseURL = morphProperties.databaseURL;
-//			DBUtility.getLocalConnection(databaseUser, databaseName, databasePassword, 
-//					databaseDriver, databaseURL, "Runner");
-//		} else {
-//		  null
-//		}
-//
-//		connection;
-//	}	
 	
 }
 

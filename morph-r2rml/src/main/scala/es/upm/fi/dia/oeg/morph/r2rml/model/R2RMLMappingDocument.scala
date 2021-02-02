@@ -235,6 +235,9 @@ extends MorphBaseMappingDocument(classMappings) with MorphR2RMLElement {
 	
 }
 
+/**
+ * R2RMLMappingDocument
+ */
 object R2RMLMappingDocument {
   val logger = LoggerFactory.getLogger(this.getClass());
 	
@@ -320,7 +323,7 @@ object R2RMLMappingDocument {
 		md.mappingDocumentPrefixMap = model.getNsPrefixMap().toMap;
 		md
 		
-	}
+	}//apply
 	
 	/**
 	 *  Add triples with rdf:type rr:TriplesMap for resources that have one rr:logicalTable

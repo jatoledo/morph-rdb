@@ -63,9 +63,6 @@ class MorphRDBProperties extends MorphProperties {
 					this.databaseType = this.getProperty(Constants.DRIVER_PROP_NAME); 
 				}
 
-				//			if(this.databaseType == null) {
-				//				this.databaseType = Constants.DATABASE_MYSQL;
-				//			}
 
 				val propertyDatabaseTimeout = Constants.DATABASE_TIMEOUT_PROP_NAME  + "[" + i + "]";
 				val timeoutPropertyString = this.getProperty(propertyDatabaseTimeout);
@@ -78,16 +75,26 @@ class MorphRDBProperties extends MorphProperties {
 
 
 
-	
-	}
+
+	}//readConfigurationFile
+
+
 }
 
+
+
+
 object MorphRDBProperties {
-  val logger = LoggerFactory.getLogger(this.getClass());
+	val logger = LoggerFactory.getLogger(this.getClass());
 
 	def apply(pConfigurationDirectory:String , configurationFile:String) : MorphRDBProperties = {
 			val properties = new MorphRDBProperties();
 			properties.readConfigurationFile(pConfigurationDirectory, configurationFile);
 			properties
+
 	}
+	
+
+	
 }
+

@@ -147,13 +147,13 @@ class MorphRDBDataTranslator(md:R2RMLMappingDocument, materializer:MorphBaseMate
       throw new Exception(errorMessage);
     }
 
+    
     val logicalTableAlias = logicalTable.alias;
 
     val conn = this.connection
     val timeout = this.properties.databaseTimeout;
     val sqlQuery = iQuery.toString();
     val rows = DBUtility.execute(conn, sqlQuery, timeout);
-
     var mapXMLDatatype : Map[String, String] = Map.empty;
     var mapDBDatatype:Map[String, Integer]  = Map.empty;
     var rsmd : ResultSetMetaData = null;
@@ -161,9 +161,12 @@ class MorphRDBDataTranslator(md:R2RMLMappingDocument, materializer:MorphBaseMate
 
     try {
       rsmd = rows.getMetaData();
+      
       val columnCount = rsmd.getColumnCount();
       for (i <- 0 until columnCount) {
-        val columnName = rsmd.getColumnName(i+1);
+        //val columnName = rsmd.getColumnName(i+1);
+        val columnName = rsmd.getColumnLabel(i+1); //JToledo
+        
         val columnType= rsmd.getColumnType(i+1);
         mapDBDatatype += (columnName -> new Integer(columnType));
         val mappedDatatype = datatypeMapper.getMappedType(columnType);
@@ -492,22 +495,26 @@ class MorphRDBDataTranslator(md:R2RMLMappingDocument, materializer:MorphBaseMate
                   ) : Node = {
     val result = termMap.termMapType match {
       case Constants.MorphTermMapType.ConstantTermMap => {
+        
         this.nodeGenerator.generateNodeFromConstantMap(termMap);
+        
       }
       case Constants.MorphTermMapType.ColumnTermMap => {
+        
         val columnTermMapValue = if(logicalTableAlias != null && !logicalTableAlias.equals("")) {
           val termMapColumnValueSplit = termMap.columnName.split("\\.");
           //val columnName = termMapColumnValueSplit(termMapColumnValueSplit.length - 1).replaceAll("\"", dbEnclosedCharacter);
           //val columnName = termMapColumnValueSplit(termMapColumnValueSplit.length - 1).replaceAll(dbEnclosedCharacter, "");
           val columnName = termMapColumnValueSplit(termMapColumnValueSplit.length - 1).replaceAllLiterally("\\\"", "");
-
+         
           logicalTableAlias + "_" + columnName;
         }
         else { termMap.columnName }
-
+        
         this.nodeGenerator.generateNodeFromColumnMap(termMap, rs, mapXSDDatatype, columnTermMapValue);
       }
       case Constants.MorphTermMapType.TemplateTermMap => {
+        
         //this.nodeGenerator.generateNodeFromTemplateMap(termMap, rs, logicalTableAlias, null, null);
 
         val dbType = this.properties.databaseType;

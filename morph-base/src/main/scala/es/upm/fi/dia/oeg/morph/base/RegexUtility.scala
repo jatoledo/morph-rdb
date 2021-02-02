@@ -75,7 +75,9 @@ object RegexUtility {
 	}
 
 	def getTemplateColumns(templateString0 : String, cleanColumn : Boolean) : java.util.List[String] = {
+	  
 		val columnsFromTemplate = TemplatePattern1.findAllIn(templateString0).toList;
+	  //println("log"+TemplatePattern1)
 		val result = { if(cleanColumn) {
 			for(templateColumn <- columnsFromTemplate)
 				yield templateColumn.substring(1, templateColumn.length() - 1)

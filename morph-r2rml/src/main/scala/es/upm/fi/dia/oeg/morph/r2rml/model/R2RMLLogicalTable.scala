@@ -24,7 +24,9 @@ extends MorphBaseLogicalTable with MorphR2RMLElement{
 		    else { Constants.DATABASE_DEFAULT }
 		      
 		    val enclosedChar = Constants.getEnclosedCharacter(dbType);
-		    val tableNameAux = r2rmlTable.getValue().replaceAll("\"", enclosedChar);
+		    //val tableNameAux = r2rmlTable.getValue().replaceAll("\"", enclosedChar);
+		    val tableNameAux = r2rmlTable.getValue().replaceAll("\\\\\"","")//JToledo
+
 		    tableNameAux
 		  }
 		  case r2rmlSQLQuery:R2RMLSQLQuery => {
@@ -73,8 +75,10 @@ object R2RMLLogicalTable {
 	def parse(resource:Resource ) : R2RMLLogicalTable  = {
 		 
 		val tableNameStatement = resource.getProperty(Constants.R2RML_TABLENAME_PROPERTY);
+		
 		val logicalTable : R2RMLLogicalTable = if(tableNameStatement != null) {
-			val tableName = tableNameStatement.getObject().toString();
+		  //val tableName = tableNameStatement.getObject().toString();
+			val tableName = tableNameStatement.getObject().toString().replaceAll("\\\\\"","");
 			new R2RMLTable(tableName);			
 		} else {
 			val sqlQueryStatement = resource.getProperty(
@@ -91,7 +95,6 @@ object R2RMLLogicalTable {
 			
 			new R2RMLSQLQuery(sqlQueryString);
 		}
-
 		logicalTable;
 	}  
 }

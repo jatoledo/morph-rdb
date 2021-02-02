@@ -46,6 +46,7 @@ class NTripleMaterializer(model:Model,ntWriter:Writer, ntOutputStream: OutputStr
     val graphNode = quad.getGraph;
     if(graphNode == null) {
       val triple = quad.asTriple()
+      
       val streamRDF:StreamRDF = StreamRDFWriter.getWriterStream(outputStream, Lang.NTRIPLES)
       streamRDF.start()
       val tripleIterator = List(triple).toIterator.asJava;

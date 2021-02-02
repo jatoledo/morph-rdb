@@ -99,18 +99,26 @@ abstract class MorphBaseRunner(mappingDocument:MorphBaseMappingDocument
     //		this.preMaterializeProcess(outputFileName);
 
     logger.info("Materializing mapping document ...");
+    
     //MATERIALIZING MODEL
     val startGeneratingModel = System.currentTimeMillis();
     //		this.dataTranslator.translateData(md);
+    
     val cms = md.classMappings;
-
     //this.dataTranslator.translateData(cms);
     cms.foreach(cm => {
       logger.info("Materializing triples map " + cm.name);
       val sqlQuery = this.unfolder.unfoldConceptMapping(cm);
+      try{///////
+        
       this.dataTranslator.get.generateRDFTriples(cm, sqlQuery);
+      }catch{
+				case e:Exception => {
+				throw e;
+			}
+      }
     })
-
+    
     this.dataTranslator.get.materializer.materialize();
 
     //POSTMATERIALIZE PROCESS
@@ -119,9 +127,10 @@ abstract class MorphBaseRunner(mappingDocument:MorphBaseMappingDocument
     val endGeneratingModel = System.currentTimeMillis();
     val durationGeneratingModel = (endGeneratingModel-startGeneratingModel) / 1000;
     logger.debug("Materializing Mapping Document time was "+(durationGeneratingModel)+" s.");
-  }
+  }//materializeMappingDocuments
 
   def readSPARQLFile(sparqQueryFileURL:String ) {
+    
     if(this.queryTranslator.isDefined) {
       this.sparqlQuery = Some(QueryFactory.read(sparqQueryFileURL));
     }
@@ -146,15 +155,20 @@ abstract class MorphBaseRunner(mappingDocument:MorphBaseMappingDocument
     //		} else { null }
 
     try {
+      
       if(!this.sparqlQuery.isDefined) {
+        
         //set output file
         this.materializeMappingDocuments(mappingDocument);
       } else {
+       
         //logger.debug("sparql query = " + this.sparqlQuery.get);
 
         //LOADING ONTOLOGY FILE
         //REWRITE THE SPARQL QUERY IF NECESSARY
+    
         val queries = if(!this.ontologyFilePath.isDefined) {
+         
           List(sparqlQuery.get);
         } else {
           //REWRITE THE QUERY BASED ON THE MAPPINGS AND ONTOLOGY
@@ -176,14 +190,17 @@ abstract class MorphBaseRunner(mappingDocument:MorphBaseMappingDocument
           List(sparqlQuery.get);
         }
 
-
+         
         //TRANSLATE SPARQL QUERIES INTO SQL QUERIES
         this.mapSparqlSql= this.translateSPARQLQueriesIntoSQLQueries(queries);
-
+         
+        //println("++++++++++++++++++"+this.mapSparqlSql);
         //translate result
         //if (this.conn != null) {
         //GFT does not need a Connection instance
+       
         this.queryResultTranslator.get.translateResult(mapSparqlSql);
+        
         //}
       }
 
@@ -203,19 +220,21 @@ abstract class MorphBaseRunner(mappingDocument:MorphBaseMappingDocument
     logger.info("errorCode = " + errorCode);
     logger.info("status = " + status);
     logger.info("**********************DONE****************************");
-
+    
     return status;
   }
 
   def translateSPARQLQueriesIntoSQLQueries(sparqlQueries:Iterable[Query] )
   :Map[Query, IQuery]={
+     
     val sqlQueries = sparqlQueries.map(sparqlQuery => {
-      //logger.debug("SPARQL Query = \n" + sparqlQuery);
+      
       val sqlQuery = this.queryTranslator.get.translate(sparqlQuery);
+       
       //logger.debug("SQL Query = \n" + sqlQuery);
       (sparqlQuery -> sqlQuery);
     })
-
+    
     sqlQueries.toMap
   }
 
@@ -244,7 +263,8 @@ abstract class MorphBaseRunner(mappingDocument:MorphBaseMappingDocument
     val endGeneratingModel = System.currentTimeMillis();
     val durationGeneratingModel = (endGeneratingModel-startGeneratingModel) / 1000;
     logger.info("Materializing Subjects time was "+(durationGeneratingModel)+" s.");
-  }
+    
+  }//materializeClassMappings
 
   def materializeInstanceDetails(subjectURI:String,cms:Iterable[MorphBaseClassMapping]):Unit={
     if(!this.dataTranslator.isDefined) {
@@ -300,6 +320,7 @@ abstract class MorphBaseRunner(mappingDocument:MorphBaseMappingDocument
 
   def getQueryResultWriter() = {
     if(queryResultTranslator.isDefined) {
+      
       queryResultTranslator.get.queryResultWriter
     }
     else { null }

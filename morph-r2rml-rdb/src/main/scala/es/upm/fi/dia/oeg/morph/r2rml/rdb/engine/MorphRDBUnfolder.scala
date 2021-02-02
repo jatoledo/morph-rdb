@@ -413,6 +413,7 @@ class MorphRDBUnfolder(md:R2RMLMappingDocument, properties:MorphRDBProperties)
       resultAux;
     }
     result;
+    
   }
 
   def unfoldTriplesMap(triplesMap:R2RMLTriplesMap ) : IQuery  = {

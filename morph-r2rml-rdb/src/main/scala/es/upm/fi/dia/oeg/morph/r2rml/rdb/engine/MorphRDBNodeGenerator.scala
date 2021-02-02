@@ -179,14 +179,21 @@ class MorphRDBNodeGenerator(properties:MorphProperties) {
     val dbType = this.properties.databaseType;
     val datatype = if(termMap.datatype.isDefined) { termMap.datatype }
     else {
+      
       val columnNameAux = termMap.columnName.replaceAll("\"", "");
       val datatypeAux = {
         if(mapXSDDatatype == null || mapXSDDatatype.isEmpty) {
           null
         } else {
           val columnNameAuxDatatype = mapXSDDatatype.get(columnNameAux);
-          if(columnNameAuxDatatype.isDefined) { columnNameAuxDatatype }
-          else { mapXSDDatatype.get(columnName); }
+          
+          if(columnNameAuxDatatype.isDefined) { 
+            columnNameAuxDatatype 
+         }else {
+            var r = mapXSDDatatype.get(columnName);
+            //println("///"+ columnName+"--> "+r)
+            r
+            }
         }
       }
       datatypeAux

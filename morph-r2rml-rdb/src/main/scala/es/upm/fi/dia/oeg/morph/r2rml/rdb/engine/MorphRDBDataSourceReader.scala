@@ -22,13 +22,7 @@ class MorphRDBDataSourceReader() extends MorphBaseDataSourceReader {
     rs
   }
 
-  //	def execute(query:String , connection:Connection , timeout:Int ) : Boolean = {
-  //		DBUtility.execute(this.connection, query, timeout);
-  //	}
-  //
-  //	override def execute(query:String ) : Boolean  = {
-  //		this.execute(query, this.connection, this.timeout);
-  //	}
+
 
 
   override def setConnection(connection:Object) = {

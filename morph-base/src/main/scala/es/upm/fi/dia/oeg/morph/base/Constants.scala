@@ -58,6 +58,7 @@ object Constants {
 
 
   val DATABASE_POSTGRESQL_ENCLOSED_CHARACTER = "\"";
+  //val DATABASE_POSTGRESQL_ENCLOSED_CHARACTER = "";
   val DATABASE_ORACLE_ENCLOSED_CHARACTER = "\"";
   val DATABASE_MONETDB_ENCLOSED_CHARACTER = "\"";
   val DATABASE_MYSQL_ENCLOSED_CHARACTER = "`";
@@ -232,7 +233,8 @@ object Constants {
   val R2RML_TEMPLATE_URI = R2RML_NS + "template";
   val R2RML_TEMPLATE_PROPERTY = ResourceFactory.createProperty(R2RML_TEMPLATE_URI);
 
-  val R2RML_TEMPLATE_PATTERN = "\\{\"*\\w+(\\s\\w+)*\\\"*}";
+  //val R2RML_TEMPLATE_PATTERN = "\\{\"*\\w+(\\s\\w+)*\\\"*}";
+  val R2RML_TEMPLATE_PATTERN = "\\{\"*\\w+(\\s\\w+)*\\\"*}|\\{`*\\w+(\\s\\w+)*`*}"; //JToledo
 
   //TriplesMap
   val R2RML_LOGICALTABLE_URI = R2RML_NS + "logicalTable";

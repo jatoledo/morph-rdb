@@ -76,7 +76,21 @@ class MorphProperties extends java.util.Properties {
   var inputDateFormat:DateFormat = null;
   //var outputDateFormat:DateFormat = new SimpleDateFormat("yyyy-MMM-dd", Locale.ENGLISH);
   var outputDateFormat:DateFormat = null;
-
+  /**
+   * by Jhon T
+   */
+  def mappingDocumentFilePath_(mapping_path:String){
+    this.mappingDocumentFilePath = mapping_path
+    if(this.mappingDocumentFilePath != null) {
+      val isNetResourceMapping = GeneralUtility.isNetResource(this.mappingDocumentFilePath);
+      if(!isNetResourceMapping && configurationDirectory != null) {
+        this.mappingDocumentFilePath = configurationDirectory + mappingDocumentFilePath;
+      }
+    }
+    logger.info(mappingDocumentFilePath)//by Jhon
+  }//mappingDocumentFilePath_
+  
+  
   def readConfigurationFile(pConfigurationDirectory:String , configurationFile:String) = {
     var absoluteConfigurationFile = configurationFile;
     var configurationDirectory = pConfigurationDirectory;
@@ -90,9 +104,10 @@ class MorphProperties extends java.util.Properties {
     this.configurationFileURL = absoluteConfigurationFile;
     this.configurationDirectory = configurationDirectory;
 
-    logger.info("reading configuration file : " + absoluteConfigurationFile);
+    
     try {
       val fis = new FileInputStream(absoluteConfigurationFile);
+      logger.info("reading configuration file : " + absoluteConfigurationFile);
       val isr = new InputStreamReader(fis, "UTF-8");
       this.load(isr);
 
@@ -102,8 +117,9 @@ class MorphProperties extends java.util.Properties {
     } catch {
       case e:FileNotFoundException => {
         val errorMessage = "Configuration file not found: " + absoluteConfigurationFile;
+        println("This file could not be found!")
         logger.error(errorMessage);
-        e.printStackTrace();
+        //e.printStackTrace();
         throw e;
       }
       case e:IOException => {
@@ -220,16 +236,7 @@ class MorphProperties extends java.util.Properties {
     this.transformString = this.readString(MorphProperties.TRANSFORM_STRING_PROPERTY, None);
     logger.debug("String transformation = " + this.transformString);
 
-    //		val uriEncodeString = this.readString(MorphProperties.URI_ENCODE_PROPERTY, None);
-    //		if(uriEncodeString.isDefined) {
-    //			val mapURIEncodings = uriEncodeString.get.split(",,");
-    //			val mapEncodingChars = mapURIEncodings.map(x => {
-    //				val mapEncodingChar = x.substring(1, x.length()-1).split("->");
-    //				(mapEncodingChar(0).substring(1, mapEncodingChar(0).length()-1) -> mapEncodingChar(1).substring(1, mapEncodingChar(1).length()-1))
-    //			} )
-    //			this.mapURIEncodingChars = mapEncodingChars.toMap;
-    //			logger.info("this.mapURIEncodingChars = " + this.mapURIEncodingChars);
-    //		}
+  
     val uriEncodingPropertyValue = this.readMapStringString(MorphProperties.URI_ENCODE_PROPERTY, Map.empty);
     this.mapURIEncodingChars = uriEncodingPropertyValue;
 
